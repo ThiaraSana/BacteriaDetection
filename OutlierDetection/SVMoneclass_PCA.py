@@ -1,4 +1,6 @@
 from sklearn.svm import OneClassSVM
+import optunity
+import optunity.metrics
 import glob
 import os
 import numpy as np
@@ -9,10 +11,8 @@ from sklearn.decomposition import PCA
 import xlwt
 from xlwt import Workbook
 
-# np.set_printoptions(threshold=sys.maxsize)
-
-train_folder = '/Users/sanaahmed/Desktop/Outlier Detection/Data/Cuvette/TrainingData/' # Change to appropriate file path
-test_folder = '/Users/sanaahmed/Desktop/Outlier Detection/Data/Cuvette/TestingData/' # Change to appropriate file path
+train_folder = '/Users/sanaahmed/Desktop/FlowCell/TrainingData/' # Change to appropriate file path
+test_folder = '/Users/sanaahmed/Desktop/FlowCell/TestingData/' # Change to appropriate file path
 
 def getData(folder, footer, header, graphtitle, legendtitle, filename, labelnumber):
     data = []
@@ -56,7 +56,7 @@ def getData(folder, footer, header, graphtitle, legendtitle, filename, labelnumb
     ylabel("Absorbance")
     title(graphtitle)
     legend(name, fontsize = 'xx-small', fancybox = True, title= legendtitle)
-    plt.savefig('/Users/sanaahmed/Desktop/Outlier Detection/Results/Cuvette/UVvis/UVVis_wPCA_' + filename + '.png') # Change to appropriate file path
+    plt.savefig('/Users/sanaahmed/Desktop/FlowCell/UVVis_wPCA_' + filename + '.png') # Change to appropriate file path
     plt.clf()
     
     return data1, wavelength, fixlabel, blankcount, baccount
@@ -74,7 +74,7 @@ def SetPCA(absorbance):
     title('PCA Loading Matrix')
     legend(['PC1', 'PC2', 'PC3'], fontsize = 'small', fancybox = True)
     
-    plt.savefig('/Users/sanaahmed/Desktop/Outlier Detection/Results/Cuvette/xloadings/' + 'PCALoadingMatrix.png') # Change to appropriate file path
+    plt.savefig('/Users/sanaahmed/Desktop/FlowCell/xloadings' + 'PCALoadingMatrix.png') # Change to appropriate file path
     plt.clf()
 
     return absorbance_pca, pca
@@ -92,7 +92,7 @@ def VisualizeClustering(data, prediction, filename):
     values = data[anom_index]
     plt.scatter(data[:,0], data[:,1])
     plt.scatter(values[:,0], values[:,1], color='r')
-    plt.savefig('/Users/sanaahmed/Desktop/Outlier Detection/Results/Cuvette/Results/' + filename +'.png') # Change to appropriate file path
+    plt.savefig('/Users/sanaahmed/Desktop/FlowCell/' + filename +'.png') # Change to appropriate file path
     plt.clf()
 
 def SaveResultsToExcel(SaveName, SheetTitle, correcttest, correcttestpercentage, incorrecttest, correcttrain, correcttrainpercentage, incorrecttrain, trainsamplenumb, testsamplenumb, bacteriasamples_train, blanksamples_train, bacteriasamples_test, blanksamples_test):
@@ -124,7 +124,7 @@ def SaveResultsToExcel(SaveName, SheetTitle, correcttest, correcttestpercentage,
     sheet.write(4, 1, correcttestpercentage)
     sheet.write(4, 2, correcttrainpercentage)
   
-    workbook.save('/Users/sanaahmed/Desktop/Outlier Detection/Results/Cuvette/LogSheets/'+ SaveName)
+    workbook.save('/Users/sanaahmed/Desktop/FlowCell/'+ SaveName)
 
 if __name__ == "__main__":
     training_files = sorted(glob.glob(train_folder+"*csv"),key=os.path.getmtime)

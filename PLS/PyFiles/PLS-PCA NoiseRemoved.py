@@ -3,7 +3,7 @@ import os
 import numpy as np
 import pandas as pd
 import sys
-sys.path.append('/Users/sanaahmed/Desktop/mb-master')
+sys.path.append('/Users/sanaahmed/Desktop/SMART/mb-master')
 import mb
 from pylab import *
 import scipy.signal

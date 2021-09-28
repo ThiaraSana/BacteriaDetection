@@ -1,4 +1,6 @@
 from sklearn.svm import OneClassSVM
+import optunity
+import optunity.metrics
 import glob
 import os
 import numpy as np
@@ -6,9 +8,8 @@ from pylab import *
 import xlwt
 from xlwt import Workbook
 
-
-train_folder = '/Users/sanaahmed/Desktop/Outlier Detection/Data/Cuvette/TrainingData/' # Change to appropriate file path
-test_folder = '/Users/sanaahmed/Desktop/Outlier Detection/Data/Cuvette/TestingData/' # Change to appropriate file path
+train_folder = '/Users/sanaahmed/Desktop/AnomalyDetection/Cuvette/TrainingSData/' # Change to appropriate file path
+test_folder = '/Users/sanaahmed/Desktop/AnomalyDetection/Cuvette/TestingBData/' # Change to appropriate file pathth
 
 def getData(folder, footer, header, graphtitle, legendtitle, filename, labelnumber):
     data = []
@@ -51,8 +52,8 @@ def getData(folder, footer, header, graphtitle, legendtitle, filename, labelnumb
     xlabel("wavelength [nm]")
     ylabel("Absorbance")
     title(graphtitle)
-    legend(name, fontsize = 'small', fancybox = True, title= legendtitle)
-    plt.savefig('/Users/sanaahmed/Desktop/Outlier Detection/Results/Cuvette/UVvis/UVVis_' + filename + '.png') # Change to appropriate file path
+    # legend(name, fontsize = 'small', fancybox = True, title= legendtitle)
+    plt.savefig('/Users/sanaahmed/Desktop/AnomalyDetection/Cuvette/UVVis_' + filename + '.png') # Change to appropriate file path
     plt.clf()
     
     return data1, wavelength, fixlabel, blankcount, baccount
@@ -93,13 +94,13 @@ def SaveResultsToExcel(SaveName, SheetTitle, correcttest, correcttestpercentage,
   sheet.write(4, 1, correcttestpercentage)
   sheet.write(4, 2, correcttrainpercentage)
   
-  workbook.save('/Users/sanaahmed/Desktop/Outlier Detection/Results/Cuvette/LogSheets/'+SaveName)
+  workbook.save('/Users/sanaahmed/Desktop/AnomalyDetection/Cuvette/'+SaveName)
 
 if __name__ == "__main__":
     training_files = sorted(glob.glob(train_folder+"*csv"),key=os.path.getmtime)
     trainX, wavelength, label_train, blankcount_train, baccount_train = getData(training_files, 173, 2002,  "Training Data UV Vis Spectrum", 'File Name0823', "TrainingData0823", 69)
     # When Running sheet with new data set change the name of the file to prevent it replacing the previous
-    svm = OneClassSVM(kernel='rbf', gamma='scale', nu=0.5)
+    svm = OneClassSVM(kernel='rbf', gamma=0.002, nu=0.1)
     svm.fit(trainX)
     pred = svm.predict(trainX)
     correct_train = np.where(pred==label_train)[0]
